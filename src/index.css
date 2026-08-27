@@ -1,0 +1,73 @@
+:root {
+  color-scheme: light;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+body {
+  margin: 0;
+  background: #f7f8fa;
+  color: #1a1d21;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.ticker-bar {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.ticker-bar h1 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.ticker-bar .price {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.change.up { color: #0a8f4c; }
+.change.down { color: #d63a3a; }
+.volume { color: #6b7280; }
+
+.badge {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.badge-loading { background: #e5e7eb; color: #374151; }
+.badge-demo { background: #fef3c7; color: #92400e; }
+
+.order-book {
+  display: flex;
+  gap: 16px;
+}
+
+.book-side {
+  flex: 1;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.book-side th {
+  text-align: right;
+  color: #6b7280;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.book-side td {
+  text-align: right;
+  padding: 2px 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.book-side.bids .price { color: #0a8f4c; }
+.book-side.asks .price { color: #d63a3a; }

@@ -1,3 +1,21 @@
+import { useEffect } from 'react'
+import { createBinanceSource } from './marketdata/binanceSource'
+import { createDemoSource } from './marketdata/demoSource'
+import { withDemoFallback } from './marketdata/withDemoFallback'
+import { connectStore } from './store/marketStore'
+import { TickerBar } from './components/TickerBar'
+import { OrderBookTable } from './components/OrderBookTable'
+
 export default function App() {
-  return <main>Order Book</main>
+  useEffect(() => {
+    const source = withDemoFallback(createBinanceSource(), createDemoSource())
+    return connectStore(source)
+  }, [])
+
+  return (
+    <main className="app">
+      <TickerBar />
+      <OrderBookTable />
+    </main>
+  )
 }
