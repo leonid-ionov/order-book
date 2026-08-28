@@ -2,6 +2,8 @@
 
 A browser-based BTC/USDT order book built with React and TypeScript. It combines a Binance REST snapshot with updates from the `@depth@100ms` WebSocket stream and keeps both sides of the book synchronized by update ID.
 
+[Live demo](https://order-book-one-peach.vercel.app/)
+
 ![Order book interface](docs/order-book.jpg)
 
 ## What it handles
@@ -31,7 +33,7 @@ npm test
 npm run build
 ```
 
-The test suite contains 43 tests across 9 files. It covers payload validation, snapshot and delta reconciliation, reconnection, source orchestration, fallback behavior, store batching, and the main UI components.
+The test suite contains 44 tests across 9 files. It covers payload validation, snapshot and delta reconciliation, reconnection, source orchestration, fallback behavior, store batching, and the main UI components.
 
 ## Stack
 
