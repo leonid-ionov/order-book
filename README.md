@@ -9,7 +9,7 @@ A browser-based BTC/USDT order book built with React and TypeScript. It combines
 - Deltas received before the REST snapshot are buffered and replayed after it arrives.
 - Stale updates are ignored. A gap in update IDs starts a fresh synchronization cycle.
 - The WebSocket reconnects with exponential backoff.
-- After repeated WebSocket failures, the app switches to a synthetic feed and marks it as demo data.
+- After repeated connection or snapshot failures, the app switches to a synthetic feed and marks it as demo data.
 - Market updates are applied to the Zustand store once per animation frame.
 - The UI renders the best 30 bid and ask levels.
 

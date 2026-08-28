@@ -29,7 +29,7 @@ Bid and ask levels are stored in separate maps keyed by price. A size of zero re
 
 The connection retries with exponential backoff. A reconnect clears the current book and starts synchronization again. Snapshot requests are retried while the current connection epoch remains active, which prevents an older request from overwriting newer state.
 
-After the configured number of failed WebSocket reconnection attempts, the source reports an error. `withDemoFallback` then unsubscribes from Binance and starts the synthetic data source.
+After the configured number of failed WebSocket reconnection or snapshot attempts, the source reports an error. `withDemoFallback` then unsubscribes from Binance and starts the synthetic data source.
 
 ## Rendering
 

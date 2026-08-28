@@ -6,7 +6,7 @@ import { OrderBookReconciler } from './reconciler'
 export const BINANCE_WS_URL =
   'wss://stream.binance.com:9443/stream?streams=btcusdt@depth@100ms/btcusdt@ticker'
 export const BINANCE_SNAPSHOT_URL =
-  'https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=1000'
+  'https://data-api.binance.vision/api/v3/depth?symbol=BTCUSDT&limit=1000'
 
 async function defaultFetchSnapshot(): Promise<BookSnapshot> {
   const res = await fetch(BINANCE_SNAPSHOT_URL)
@@ -18,6 +18,7 @@ export interface BinanceSourceOpts {
   createSocket?: SocketFactory
   fetchSnapshot?: () => Promise<BookSnapshot>
   maxReconnectAttempts?: number
+  maxSnapshotAttempts?: number
   snapshotRetryMs?: number
   topN?: number
 }
@@ -28,7 +29,8 @@ export interface BinanceSourceOpts {
  */
 export function createBinanceSource(opts: BinanceSourceOpts = {}): MarketDataSource {
   const fetchSnapshot = opts.fetchSnapshot ?? defaultFetchSnapshot
-  const maxAttempts = opts.maxReconnectAttempts ?? 5
+  const maxReconnectAttempts = opts.maxReconnectAttempts ?? 5
+  const maxSnapshotAttempts = opts.maxSnapshotAttempts ?? 5
   const retryMs = opts.snapshotRetryMs ?? 1000
   const topN = opts.topN ?? 30
 
@@ -38,11 +40,12 @@ export function createBinanceSource(opts: BinanceSourceOpts = {}): MarketDataSou
       let synced = false
       let epoch = 0 // инвалидирует снапшоты/ретраи в полёте
       let stopped = false
+      let socket: ReconnectingSocket
 
       const emitBook = () =>
         observer.next({ type: 'book', bids: reconciler.topBids(topN), asks: reconciler.topAsks(topN) })
 
-      const loadSnapshot = async (myEpoch: number): Promise<void> => {
+      const loadSnapshot = async (myEpoch: number, attempt = 1): Promise<void> => {
         try {
           const snapshot = await fetchSnapshot()
           if (stopped || myEpoch !== epoch) return
@@ -56,8 +59,15 @@ export function createBinanceSource(opts: BinanceSourceOpts = {}): MarketDataSou
           emitBook()
         } catch {
           if (stopped || myEpoch !== epoch) return
+          if (attempt >= maxSnapshotAttempts) {
+            stopped = true
+            epoch++
+            socket.close()
+            observer.error?.(new Error(`snapshot fetch failed after ${attempt} attempts`))
+            return
+          }
           setTimeout(() => {
-            if (!stopped && myEpoch === epoch) void loadSnapshot(myEpoch)
+            if (!stopped && myEpoch === epoch) void loadSnapshot(myEpoch, attempt + 1)
           }, retryMs)
         }
       }
@@ -69,7 +79,7 @@ export function createBinanceSource(opts: BinanceSourceOpts = {}): MarketDataSou
         void loadSnapshot(++epoch)
       }
 
-      const socket = new ReconnectingSocket(
+      socket = new ReconnectingSocket(
         BINANCE_WS_URL,
         {
           onUp: () => resync(),
@@ -77,7 +87,7 @@ export function createBinanceSource(opts: BinanceSourceOpts = {}): MarketDataSou
             synced = false
             reconciler.reset()
             epoch++
-            if (attempt >= maxAttempts) {
+            if (attempt >= maxReconnectAttempts) {
               socket.close()
               observer.error?.(new Error(`connection failed after ${attempt} attempts`))
             } else {

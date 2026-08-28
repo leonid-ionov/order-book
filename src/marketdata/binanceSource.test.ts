@@ -22,12 +22,18 @@ const SNAPSHOT: BookSnapshot = {
   asks: [{ price: 101, size: 1 }],
 }
 
-function setup(opts: { fetchSnapshot?: () => Promise<BookSnapshot>; maxReconnectAttempts?: number } = {}) {
+function setup(
+  opts: {
+    fetchSnapshot?: () => Promise<BookSnapshot>
+    maxReconnectAttempts?: number
+    maxSnapshotAttempts?: number
+  } = {},
+) {
   const sockets: FakeSocket[] = []
   const updates: MarketUpdate[] = []
   const errors: unknown[] = []
   const fetchSnapshot = opts.fetchSnapshot ?? vi.fn(async () => SNAPSHOT)
-  const source = createBinanceSource({
+  const sourceOpts = {
     createSocket: () => {
       const s = new FakeSocket()
       sockets.push(s)
@@ -35,8 +41,10 @@ function setup(opts: { fetchSnapshot?: () => Promise<BookSnapshot>; maxReconnect
     },
     fetchSnapshot,
     maxReconnectAttempts: opts.maxReconnectAttempts ?? 5,
+    maxSnapshotAttempts: opts.maxSnapshotAttempts ?? 5,
     snapshotRetryMs: 1000,
-  })
+  }
+  const source = createBinanceSource(sourceOpts)
   const unsubscribe = source.subscribe({
     next: (u) => updates.push(u),
     error: (e) => errors.push(e),
@@ -118,6 +126,21 @@ describe('createBinanceSource', () => {
     await vi.advanceTimersByTimeAsync(1000)
     expect(fetchSnapshot).toHaveBeenCalledTimes(2)
     expect(updates.some((u) => u.type === 'status' && u.status === 'live')).toBe(true)
+  })
+
+  it('calls observer.error after maxSnapshotAttempts failures', async () => {
+    const fetchSnapshot = vi.fn<() => Promise<BookSnapshot>>().mockRejectedValue(new Error('blocked'))
+    const { sockets, errors } = setup({ fetchSnapshot, maxSnapshotAttempts: 3 })
+    sockets[0]!.onopen!()
+
+    await flushMicrotasks()
+    await vi.advanceTimersByTimeAsync(1000)
+    await vi.advanceTimersByTimeAsync(1000)
+
+    expect(fetchSnapshot).toHaveBeenCalledTimes(3)
+    expect(errors).toHaveLength(1)
+    await vi.advanceTimersByTimeAsync(60000)
+    expect(fetchSnapshot).toHaveBeenCalledTimes(3)
   })
 
   it('calls observer.error after maxReconnectAttempts consecutive failures', async () => {
