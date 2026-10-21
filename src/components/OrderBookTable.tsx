@@ -71,6 +71,7 @@ export function OrderBookTable() {
             <th className="px-2 md:px-3 py-1.5 text-right font-normal">Total</th>
           </tr>
         </thead>
+        {/* SpreadRow смонтирован всегда, чтобы направление тика совпадало с шапкой с первого тика. */}
         {waiting ? (
           <tbody>
             <tr>
@@ -80,12 +81,10 @@ export function OrderBookTable() {
             </tr>
           </tbody>
         ) : (
-          <>
-            <Levels side="asks" />
-            <SpreadRow />
-            <Levels side="bids" />
-          </>
+          <Levels side="asks" />
         )}
+        <SpreadRow />
+        {!waiting && <Levels side="bids" />}
       </table>
     </div>
   )

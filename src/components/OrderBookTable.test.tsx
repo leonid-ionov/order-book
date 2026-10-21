@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import { OrderBookTable } from './OrderBookTable'
 import { useMarketStore } from '../store/marketStore'
 
@@ -81,5 +81,17 @@ describe('OrderBookTable', () => {
     useMarketStore.setState({ status: 'loading' })
     render(<OrderBookTable />)
     expect(screen.getByText('Waiting for order book…')).toBeInTheDocument()
+  })
+
+  it('keeps the tick direction from ticks that arrived while loading', () => {
+    useMarketStore.setState({ status: 'loading' })
+    render(<OrderBookTable />)
+    const ticker = { changePercent24h: 0, volume24h: 0 }
+    act(() => useMarketStore.setState({ ticker: { ...ticker, lastPrice: 100 } }))
+    act(() => useMarketStore.setState({ ticker: { ...ticker, lastPrice: 101 } }))
+    act(() =>
+      useMarketStore.setState({ status: 'live', bids: [{ price: 100, size: 1 }], asks: [{ price: 102, size: 1 }] }),
+    )
+    expect(screen.getByText('↑')).toBeInTheDocument()
   })
 })
