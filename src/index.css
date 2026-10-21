@@ -5,6 +5,7 @@
 
 /* Токены темы. Светлая тема (итерация 6) переопределит эти переменные. */
 @theme {
+  --color-page: #141416;
   --color-bg: #1e1e20;
   --color-panel: #26262a;
   --color-panel-hover: #303035;
@@ -25,6 +26,6 @@
   }
 
   body {
-    @apply bg-bg font-sans text-text antialiased;
+    @apply bg-bg font-sans text-text antialiased md:bg-page;
   }
 }

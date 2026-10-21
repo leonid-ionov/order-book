@@ -8,5 +8,5 @@ const VARIANTS: Record<FeedStatus, { label: string; className: string }> = {
 
 export function StatusBadge({ status }: { status: FeedStatus }) {
   const { label, className } = VARIANTS[status]
-  return <span className={`rounded-full border px-2 py-0.5 text-[10px] ${className}`}>{label}</span>
+  return <span className={`rounded-full border px-2 py-0.5 text-[10px] md:px-2.5 md:text-xs ${className}`}>{label}</span>
 }

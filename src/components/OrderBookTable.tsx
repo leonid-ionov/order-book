@@ -8,8 +8,8 @@ type Side = 'bids' | 'asks'
 
 const Row = memo(function Row({ row, side }: { row: DepthRow; side: Side }) {
   return (
-    <tr className="relative leading-[17px] hover:bg-panel-hover">
-      <td className="px-2 text-left">
+    <tr className="relative leading-[17px] hover:bg-panel-hover md:leading-5">
+      <td className="px-2 md:px-3 text-left">
         <span
           aria-hidden
           className={`absolute inset-y-0 right-0 ${side === 'bids' ? 'bg-bid/15' : 'bg-ask/15'}`}
@@ -17,8 +17,8 @@ const Row = memo(function Row({ row, side }: { row: DepthRow; side: Side }) {
         />
         <span className={`relative ${side === 'bids' ? 'text-bid' : 'text-ask'}`}>{formatPrice(row.price)}</span>
       </td>
-      <td className="relative px-2 text-right">{formatSize(row.size)}</td>
-      <td className="relative px-2 text-right text-muted">{formatSize(row.total)}</td>
+      <td className="relative px-2 md:px-3 text-right">{formatSize(row.size)}</td>
+      <td className="relative px-2 md:px-3 text-right text-muted">{formatSize(row.total)}</td>
     </tr>
   )
 })
@@ -47,7 +47,7 @@ function SpreadRow() {
       <tr>
         <td colSpan={3} className="border-y border-border bg-bg px-2 py-1.5">
           <div className="flex items-baseline justify-between">
-            <span className={`text-sm font-semibold ${tone}`}>
+            <span className={`text-sm font-semibold md:text-base ${tone}`}>
               {lastPrice === undefined ? '—' : formatPriceGrouped(lastPrice)}
               {direction && <span aria-hidden> {direction === 'up' ? '↑' : '↓'}</span>}
             </span>
@@ -63,18 +63,18 @@ export function OrderBookTable() {
   const waiting = useMarketStore((s) => s.status === 'loading' && s.bids.length === 0 && s.asks.length === 0)
   return (
     <div className="overflow-hidden rounded-md border border-border bg-panel">
-      <table className="w-full border-collapse font-mono text-xs tabular-nums">
+      <table className="w-full border-collapse font-mono text-xs tabular-nums md:text-[13px]">
         <thead>
-          <tr className="border-b border-border text-[10px] uppercase tracking-[0.06em] text-muted">
-            <th className="px-2 py-1.5 text-left font-normal">Price</th>
-            <th className="px-2 py-1.5 text-right font-normal">Size</th>
-            <th className="px-2 py-1.5 text-right font-normal">Total</th>
+          <tr className="border-b border-border text-[10px] uppercase tracking-[0.06em] text-muted md:text-[11px]">
+            <th className="px-2 md:px-3 py-1.5 text-left font-normal">Price</th>
+            <th className="px-2 md:px-3 py-1.5 text-right font-normal">Size</th>
+            <th className="px-2 md:px-3 py-1.5 text-right font-normal">Total</th>
           </tr>
         </thead>
         {waiting ? (
           <tbody>
             <tr>
-              <td colSpan={3} className="px-2 py-10 text-center font-sans text-muted">
+              <td colSpan={3} className="px-2 md:px-3 py-10 text-center font-sans text-muted">
                 Waiting for order book…
               </td>
             </tr>
