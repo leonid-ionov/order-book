@@ -4,8 +4,6 @@ A browser-based BTC/USDT order book built with React and TypeScript. It combines
 
 [Live demo](https://order-book-one-peach.vercel.app/)
 
-![Order book interface](docs/order-book.jpg)
-
 ## What it handles
 
 - Deltas received before the REST snapshot are buffered and replayed after it arrives.
@@ -13,7 +11,7 @@ A browser-based BTC/USDT order book built with React and TypeScript. It combines
 - The WebSocket reconnects with exponential backoff.
 - After repeated connection or snapshot failures, the app switches to a synthetic feed and marks it as demo data.
 - Market updates are applied to the Zustand store once per animation frame.
-- The UI renders the best 30 bid and ask levels.
+- The UI shows the best 15 bid and ask levels as a depth ladder: asks above the spread, bids below, each row with a cumulative volume bar.
 
 The market data code is separated from the store and React components by the `MarketDataSource` interface. The reconciler contains no network or timer code, which keeps its behavior deterministic in tests. See [the architecture notes](docs/architecture.md) for the module boundaries and synchronization flow.
 
@@ -33,11 +31,11 @@ npm test
 npm run build
 ```
 
-The test suite contains 44 tests across 9 files. It covers payload validation, snapshot and delta reconciliation, reconnection, source orchestration, fallback behavior, store batching, and the main UI components.
+The test suite contains 68 tests across 12 files. It covers payload validation, snapshot and delta reconciliation, reconnection, source orchestration, fallback behavior, store batching, depth totals and spread, and the main UI components.
 
 ## Stack
 
-React 18, TypeScript in strict mode, Vite, Zustand, Vitest, and Testing Library. The project does not use a chart library or component framework.
+React 18, TypeScript in strict mode, Vite, Tailwind CSS v4, Zustand, Vitest, and Testing Library. The project does not use a chart library or component framework. Colors and fonts are defined as theme tokens in `src/index.css`.
 
 ## Current scope
 
