@@ -18,10 +18,7 @@ export const useMarketStore = create<MarketState>(() => ({
 type Schedule = (cb: () => void) => void
 const rafSchedule: Schedule = (cb) => requestAnimationFrame(() => cb())
 
-/**
- * Подписывает стор на источник. Перф-приём: апдейты копятся и применяются
- * ОДНИМ setState на кадр (RAF) — сколько бы сообщений ни пришло между кадрами.
- */
+/** Batches source updates into one setState per animation frame, however many messages arrive in between. */
 export function connectStore(source: MarketDataSource, schedule: Schedule = rafSchedule): () => void {
   let pending: Partial<MarketState> = {}
   let scheduled = false

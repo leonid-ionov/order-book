@@ -1,8 +1,6 @@
 import type { MarketDataSource } from '../domain/types'
 
-/**
- * Graceful degradation: primary до фатальной ошибки, затем demo.
- */
+/** Uses the primary source until it reports a fatal error, then switches to demo. */
 export function withDemoFallback(
   primary: MarketDataSource,
   demo: MarketDataSource,

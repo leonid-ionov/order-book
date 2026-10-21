@@ -26,7 +26,7 @@ const Row = memo(function Row({ row, side }: { row: DepthRow; side: Side }) {
 function Levels({ side }: { side: Side }) {
   const levels = useMarketStore((s) => (side === 'bids' ? s.bids : s.asks))
   const rows = toDepthRows(levels)
-  // Лучший ask должен стоять внизу, у строки spread.
+  // The best ask goes last, next to the spread row.
   if (side === 'asks') rows.reverse()
   return (
     <tbody>
@@ -71,7 +71,7 @@ export function OrderBookTable() {
             <th className="px-2 md:px-3 py-1.5 text-right font-normal">Total</th>
           </tr>
         </thead>
-        {/* SpreadRow смонтирован всегда, чтобы направление тика совпадало с шапкой с первого тика. */}
+        {/* Always mounted so its tick direction stays in sync with the header. */}
         {waiting ? (
           <tbody>
             <tr>

@@ -14,7 +14,6 @@ describe('createDemoSource', () => {
     const book = updates.find((u) => u.type === 'book')!
     expect(book.bids).toHaveLength(30)
     expect(book.asks).toHaveLength(30)
-    // биды по убыванию, аски по возрастанию, спред положительный
     expect(book.bids[0]!.price).toBeGreaterThan(book.bids[1]!.price)
     expect(book.asks[0]!.price).toBeLessThan(book.asks[1]!.price)
     expect(book.asks[0]!.price).toBeGreaterThan(book.bids[0]!.price)

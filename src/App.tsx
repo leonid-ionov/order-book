@@ -13,7 +13,6 @@ export default function App() {
   }, [])
 
   return (
-    // На десктопе карточка центрируется auto-отступами: без свободного места они схлопываются и не дают скролла.
     <div className="md:flex md:min-h-dvh md:flex-col">
       <main className="mx-auto w-full max-w-[420px] px-4 py-4 md:my-auto md:max-w-[560px] md:rounded-xl md:border md:border-border md:bg-bg md:p-6">
         <TickerBar />

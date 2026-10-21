@@ -2,10 +2,7 @@ import type { BookSnapshot, DepthDelta, PriceLevel } from '../domain/types'
 
 export type ApplyResult = 'applied' | 'stale' | 'gap'
 
-/**
- * Ядро стакана: Map<price, size> для каждой стороны.
- * Чистый и детерминированный: без сети, без таймеров — всё подаётся снаружи.
- */
+/** Order book state as a Map<price, size> per side. Pure: no network or timers. */
 export class OrderBookReconciler {
   private bids = new Map<number, number>()
   private asks = new Map<number, number>()

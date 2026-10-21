@@ -34,7 +34,7 @@ export interface MarketObserver {
   error?(err: unknown): void
 }
 
-/** Шов: единственный контракт, который знают store и UI. */
+/** The only data contract the store and UI depend on. */
 export interface MarketDataSource {
   subscribe(observer: MarketObserver): () => void
 }

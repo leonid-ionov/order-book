@@ -3,7 +3,6 @@
 @import '@fontsource/jetbrains-mono/600.css';
 @import 'tailwindcss';
 
-/* Токены темы. Светлая тема (итерация 6) переопределит эти переменные. */
 @theme {
   --color-page: #141416;
   --color-bg: #1e1e20;

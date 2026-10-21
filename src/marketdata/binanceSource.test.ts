@@ -62,7 +62,6 @@ describe('createBinanceSource', () => {
     const { sockets, updates } = setup()
     const ws = sockets[0]!
     ws.onopen!()
-    // дельта пришла ДО снапшота — буферизуется
     ws.onmessage!({ data: depthMsg(101, 101, [['99', '7']]) })
     await flushMicrotasks()
     expect(updates).toContainEqual({ type: 'status', status: 'loading' })
@@ -108,7 +107,7 @@ describe('createBinanceSource', () => {
     sockets[0]!.onopen!()
     await flushMicrotasks()
     expect(fetchSnapshot).toHaveBeenCalledTimes(1)
-    sockets[0]!.onmessage!({ data: depthMsg(200, 201) }) // разрыв нумерации
+    sockets[0]!.onmessage!({ data: depthMsg(200, 201) }) // sequence gap
     await flushMicrotasks()
     expect(fetchSnapshot).toHaveBeenCalledTimes(2)
     expect(updates.filter((u) => u.type === 'status' && u.status === 'live')).toHaveLength(2)
@@ -145,12 +144,12 @@ describe('createBinanceSource', () => {
 
   it('calls observer.error after maxReconnectAttempts consecutive failures', async () => {
     const { sockets, errors } = setup({ maxReconnectAttempts: 2 })
-    sockets[0]!.onclose!() // attempt 1
+    sockets[0]!.onclose!()
     await vi.advanceTimersByTimeAsync(1000)
-    sockets[1]!.onclose!() // attempt 2 → error
+    sockets[1]!.onclose!()
     expect(errors).toHaveLength(1)
     await vi.advanceTimersByTimeAsync(60000)
-    expect(sockets).toHaveLength(2) // реконнекты остановлены
+    expect(sockets).toHaveLength(2) // reconnects stopped
   })
 
   it('resyncs from scratch after reconnect', async () => {

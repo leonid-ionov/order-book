@@ -2,7 +2,7 @@ import { useRef } from 'react'
 
 export type TickDirection = 'up' | 'down' | null
 
-/** Направление последнего изменения цены. Равная цена оставляет прежнее направление. */
+/** Direction of the last price change. An unchanged price keeps the previous direction. */
 export function useTickDirection(price: number | undefined): TickDirection {
   const prev = useRef<number | undefined>(undefined)
   const direction = useRef<TickDirection>(null)

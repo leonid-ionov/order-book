@@ -3,10 +3,7 @@ import type { MarketDataSource, PriceLevel } from '../domain/types'
 const BASE_PRICE = 100_000
 const LEVELS = 30
 
-/**
- * Фейковый поток той же формы MarketDataSource — graceful degradation,
- * когда Binance недоступен. Детеминированная синусоида вместо рынка.
- */
+/** Fake MarketDataSource used when Binance is unavailable. Prices follow a deterministic sine wave. */
 export function createDemoSource(intervalMs = 250): MarketDataSource {
   return {
     subscribe(observer) {
