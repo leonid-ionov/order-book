@@ -74,7 +74,7 @@ describe('OrderBookReconciler — buffering and resync', () => {
       delta({ firstUpdateId: 95, lastUpdateId: 100, bids: [{ price: 99, size: 999 }] }),
     )
     expect(result).toBe('stale')
-    expect(book.topBids(1)).toEqual([{ price: 99, size: 1 }]) // не изменился
+    expect(book.topBids(1)).toEqual([{ price: 99, size: 1 }])
   })
 
   it('signals gap when update ids are not contiguous', () => {
@@ -105,7 +105,7 @@ describe('OrderBookReconciler — buffering and resync', () => {
     book.reset()
     expect(book.topBids(10)).toEqual([])
     expect(book.topAsks(10)).toEqual([])
-    // после reset старый буфер не должен применяться к новому снапшоту
+    // after reset the old buffer must not be applied to the new snapshot
     expect(book.applySnapshot(snapshot({ lastUpdateId: 200 }))).toBe('applied')
     expect(book.topBids(1)).toEqual([{ price: 99, size: 1 }])
   })

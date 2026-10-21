@@ -42,13 +42,12 @@ describe('connectStore', () => {
     emit({ type: 'book', bids: [{ price: 2, size: 2 }], asks: [] })
     emit({ type: 'ticker', ticker: { lastPrice: 5, changePercent24h: 0, volume24h: 0 } })
 
-    // до кадра — стор не тронут, запланирован ровно один flush
     expect(useMarketStore.getState().bids).toEqual([])
     expect(sched.pending).toBe(1)
 
     sched.flush()
     const state = useMarketStore.getState()
-    expect(state.bids).toEqual([{ price: 2, size: 2 }]) // последнее значение
+    expect(state.bids).toEqual([{ price: 2, size: 2 }])
     expect(state.ticker?.lastPrice).toBe(5)
   })
 

@@ -20,15 +20,25 @@ describe('TickerBar', () => {
       ticker: { lastPrice: 50123.456, changePercent24h: -2.15, volume24h: 12345.67 },
     })
     render(<TickerBar />)
-    expect(screen.getByText('50123.46')).toBeInTheDocument()
+    expect(screen.getByText('50,123.46')).toBeInTheDocument()
     expect(screen.getByText('-2.15%')).toBeInTheDocument()
-    expect(screen.getByText(/12346/)).toBeInTheDocument()
+    expect(screen.getByText('12,346')).toBeInTheDocument()
+    expect(screen.getByText('● Live')).toBeInTheDocument()
     expect(screen.queryByText('loading…')).not.toBeInTheDocument()
   })
 
   it('shows demo badge in demo mode', () => {
     useMarketStore.setState({ status: 'demo' })
     render(<TickerBar />)
-    expect(screen.getByText('demo data')).toBeInTheDocument()
+    expect(screen.getByText('Demo data · Binance unavailable')).toBeInTheDocument()
+  })
+
+  it('prefixes a positive 24h change with a plus', () => {
+    useMarketStore.setState({
+      status: 'live',
+      ticker: { lastPrice: 80288, changePercent24h: 1.56, volume24h: 16393 },
+    })
+    render(<TickerBar />)
+    expect(screen.getByText('+1.56%')).toBeInTheDocument()
   })
 })

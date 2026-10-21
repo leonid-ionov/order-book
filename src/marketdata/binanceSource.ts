@@ -23,10 +23,7 @@ export interface BinanceSourceOpts {
   topN?: number
 }
 
-/**
- * Фасад над Connection + Normalizer + Reconciler.
- * Наружу — только поток нормализованных MarketUpdate (шов MarketDataSource).
- */
+/** Combines Connection, Normalizer and Reconciler and emits only normalized MarketUpdate values. */
 export function createBinanceSource(opts: BinanceSourceOpts = {}): MarketDataSource {
   const fetchSnapshot = opts.fetchSnapshot ?? defaultFetchSnapshot
   const maxReconnectAttempts = opts.maxReconnectAttempts ?? 5
@@ -38,7 +35,7 @@ export function createBinanceSource(opts: BinanceSourceOpts = {}): MarketDataSou
     subscribe(observer: MarketObserver): () => void {
       const reconciler = new OrderBookReconciler()
       let synced = false
-      let epoch = 0 // инвалидирует снапшоты/ретраи в полёте
+      let epoch = 0 // invalidates in-flight snapshots and retries
       let stopped = false
       let socket: ReconnectingSocket
 

@@ -57,7 +57,7 @@ describe('ReconnectingSocket', () => {
     vi.advanceTimersByTime(1999)
     expect(sockets).toHaveLength(2)
     vi.advanceTimersByTime(1)
-    expect(sockets).toHaveLength(3) // задержка удвоилась: 2000ms
+    expect(sockets).toHaveLength(3) // delay doubled: 2000ms
   })
 
   it('caps the delay at maxDelayMs', () => {
@@ -65,7 +65,7 @@ describe('ReconnectingSocket', () => {
     conn.connect()
     for (let i = 0; i < 4; i++) {
       sockets[sockets.length - 1]!.onclose!()
-      vi.advanceTimersByTime(3000) // 4-я попытка была бы 8000 без капа
+      vi.advanceTimersByTime(3000) // the 4th attempt would be 8000 without the cap
     }
     expect(sockets).toHaveLength(5)
   })
@@ -78,7 +78,7 @@ describe('ReconnectingSocket', () => {
     sockets[1]!.onopen!()
     sockets[1]!.onclose!()
     expect(callbacks.onDown).toHaveBeenLastCalledWith(1)
-    vi.advanceTimersByTime(1000) // снова базовая задержка
+    vi.advanceTimersByTime(1000) // back to the base delay
     expect(sockets).toHaveLength(3)
   })
 

@@ -21,10 +21,7 @@ export interface ReconnectOptions {
 
 const defaultFactory: SocketFactory = (url) => new WebSocket(url) as unknown as SocketLike
 
-/**
- * Сырой WebSocket-слой: коннект, реконнект с exponential backoff.
- * Не знает про стакан и формат сообщений.
- */
+/** WebSocket with exponential-backoff reconnects. Knows nothing about the order book or message format. */
 export class ReconnectingSocket {
   private socket: SocketLike | null = null
   private attempt = 0

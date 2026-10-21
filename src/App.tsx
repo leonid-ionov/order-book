@@ -13,9 +13,11 @@ export default function App() {
   }, [])
 
   return (
-    <main className="app">
-      <TickerBar />
-      <OrderBookTable />
-    </main>
+    <div className="md:flex md:min-h-dvh md:flex-col">
+      <main className="mx-auto w-full max-w-[420px] px-4 py-4 md:my-auto md:max-w-[560px] md:rounded-xl md:border md:border-border md:bg-bg md:p-6">
+        <TickerBar />
+        <OrderBookTable />
+      </main>
+    </div>
   )
 }

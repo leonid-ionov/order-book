@@ -1,73 +1,30 @@
-:root {
-  color-scheme: light;
-  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+@import '@fontsource-variable/inter';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
+@import 'tailwindcss';
+
+@theme {
+  --color-page: #141416;
+  --color-bg: #1e1e20;
+  --color-panel: #26262a;
+  --color-panel-hover: #303035;
+  --color-border: #333337;
+  --color-text: #eceff1;
+  --color-muted: #78909c;
+  --color-accent: #ffcc80;
+  --color-bid: #0ecb81;
+  --color-ask: #f6465d;
+
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 }
 
-body {
-  margin: 0;
-  background: #f7f8fa;
-  color: #1a1d21;
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-bg font-sans text-text antialiased md:bg-page;
+  }
 }
-
-.app {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 16px;
-}
-
-.ticker-bar {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  padding: 12px 0;
-}
-
-.ticker-bar h1 {
-  font-size: 18px;
-  margin: 0;
-}
-
-.ticker-bar .price {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.change.up { color: #0a8f4c; }
-.change.down { color: #d63a3a; }
-.volume { color: #6b7280; }
-
-.badge {
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 10px;
-}
-.badge-loading { background: #e5e7eb; color: #374151; }
-.badge-demo { background: #fef3c7; color: #92400e; }
-
-.order-book {
-  display: flex;
-  gap: 16px;
-}
-
-.book-side {
-  flex: 1;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.book-side th {
-  text-align: right;
-  color: #6b7280;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.book-side td {
-  text-align: right;
-  padding: 2px 8px;
-  font-variant-numeric: tabular-nums;
-}
-
-.book-side.bids .price { color: #0a8f4c; }
-.book-side.asks .price { color: #d63a3a; }
