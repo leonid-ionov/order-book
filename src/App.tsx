@@ -13,7 +13,7 @@ export default function App() {
   }, [])
 
   return (
-    <main className="app">
+    <main className="mx-auto w-full max-w-[420px] px-4 py-4">
       <TickerBar />
       <OrderBookTable />
     </main>
